@@ -47,6 +47,10 @@ class MainActivity : AppCompatActivity() {
             quizViewModel.moveToNext()
             updateQuestion()
         }
+
+        binding.cheatButton.setOnClickListener {
+            // Start CheatActivity
+        }
         updateQuestion()
     }
 
