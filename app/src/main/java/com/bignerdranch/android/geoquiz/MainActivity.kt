@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             // Start CheatActivity
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
-            cheatLauncher.launch(intent)
+            startActivity(intent)
         }
         updateQuestion()
     }
