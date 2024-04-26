@@ -2,6 +2,9 @@ package com.bignerdranch.android.geoquiz
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +13,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import com.google.android.material.snackbar.Snackbar
 import com.bignerdranch.android.geoquiz.databinding.ActivityMainBinding
 
@@ -67,8 +71,16 @@ class MainActivity : AppCompatActivity() {
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
             cheatLauncher.launch(intent)
+            quizViewModel.amountOfAttempts -= 1
+            cheatAttemptsChecker()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            blurCheatButton()
+        }
+
         updateQuestion()
+        cheatAttemptsChecker()
     }
 
 
@@ -113,5 +125,24 @@ class MainActivity : AppCompatActivity() {
             else -> R.string.incorrect_toast
         }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+        quizViewModel.isCheater = false
+    }
+
+
+    private fun cheatAttemptsChecker(){
+        if (quizViewModel.amountOfAttempts == 0){
+            binding.cheatButton.isEnabled = false
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun blurCheatButton(){
+        val effect = RenderEffect.createBlurEffect(
+            10.0f,
+            10.0f,
+            Shader.TileMode.CLAMP
+        )
+        binding.cheatButton.setRenderEffect(effect)
     }
 }

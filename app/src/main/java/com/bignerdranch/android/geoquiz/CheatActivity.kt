@@ -3,8 +3,11 @@ package com.bignerdranch.android.geoquiz
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,6 +23,7 @@ class CheatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCheatBinding
     private var answerIsTrue = false
+    private val quizViewModel: QuizViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +34,7 @@ class CheatActivity : AppCompatActivity() {
         answerIsTrue = intent.getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false)
 
         binding.showAnswerButton.setOnClickListener {
+            quizViewModel.isPressed = true
             val answerText = when {
                 answerIsTrue -> R.string.true_button
                 else -> R.string.false_button
@@ -37,6 +42,8 @@ class CheatActivity : AppCompatActivity() {
             binding.answerTextView.setText(answerText)
             setAnswerShownResult(true)
         }
+        updateText()
+        API_shower()
     }
 
 
@@ -45,6 +52,24 @@ class CheatActivity : AppCompatActivity() {
             putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown)
         }
         setResult(Activity.RESULT_OK, data)
+    }
+
+
+    private fun updateText(){
+        val answerText = when {
+            answerIsTrue -> R.string.true_button
+            else -> R.string.false_button
+        }
+        if (quizViewModel.isPressed){
+            binding.answerTextView.setText(answerText)
+            setAnswerShownResult(true)
+        }
+    }
+
+
+    private fun API_shower(){
+        val API_level = "API level " + Build.VERSION.SDK_INT.toString()
+        binding.apiLevel.setText(API_level)
     }
 
 
