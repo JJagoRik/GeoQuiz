@@ -8,7 +8,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.action.ViewActions.click
-
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
